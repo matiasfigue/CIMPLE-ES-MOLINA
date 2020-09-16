@@ -1,0 +1,75 @@
+instalar zerotier
+
+curl -s https://install.zerotier.com/ | sudo bash
+sudo zerotier-cli join >NETWORKHASH<. b6079f73c6eb88e4
+NETWORKHASH esta en NETWORK zerotier profile
+
+Network ID
+b6079f73c6eb88e4
+
+###################
+##SERVER FLASK 
+
+import flask
+from flask import request
+import os
+
+if os.path.exists("POST.txt"):
+    print("estan creados..")
+else:
+    archivo = open("POST.txt", "w")
+
+
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
+@app.route("/", methods=["POST"])
+
+def json_entrada():
+        #VALIDAMOS QUE SEA FORMATO JSON
+        if request.is_json:
+        #PARSEAMOS LA INFORMASION SI VIENE EN FORMATI DICCIONARIO JSON 
+           respuesta = request.get_json()
+        #IMRPIMIMOS LA RESPUESTA
+           print(respuesta)
+           resultado = str(respuesta)
+           guardado = open("POST.txt", "a")
+           guardado.write(resultado)
+           print("ARREGLO",resultado)
+        #RETORNO SI EL STRING FUE RECIBIDO BIEN , RESPONDEMOS STATUS 200
+           return "JSON CORRECTO!", 200
+        else:
+         #SI NO ESTA EN FORMATO JSON DICCIONARIO RESPUESTA STATUS 400 MALFORMACION
+           return "MAL FORMACION DE JSON!", 400 
+app.run(host = '192.168.66.241', port=9000)
+
+
+
+
+
+################################
+###### oTRO
+
+import socket
+
+
+server_socket = socket.socket()
+server_address = ('192.168.1.44', 8000)
+server_socket.setsocket(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #AL CERRAR EL SOCKET SE REUTILIZA OSEA MUERE ALTIRO
+server_socket.bind(server_address)
+server_socket.listen(5)
+
+while True:
+        conn, addr = server_socket.accept()
+        print "Conexion establecida!"
+        print addr
+        print (conn.recv(1024))
+        conn.send("DATA RECIBIDA DESDE EL SERVER!")
+        conn.close()
+        #########################SALIDA MAS ELEGANTE QUE CTR+C ##########
+        salir = raw_input()
+        if salir == 'q':
+                print"SALIENDO DEL SERVER!! OMG!!"
+                break
+
+
+
